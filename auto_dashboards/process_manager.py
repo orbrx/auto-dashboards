@@ -15,22 +15,23 @@
 # limitations under the License.
 #
 
-from abc import ABC, ABCMeta, abstractmethod
 import os
 import re
-import sys
 import socket
+import sys
+from abc import ABC, ABCMeta, abstractmethod
 from subprocess import Popen, CalledProcessError, PIPE
 from time import sleep
-from typing import Dict
-from traitlets.config import SingletonConfigurable, LoggingConfigurable
+from typing import Dict, Optional
 from urllib.parse import urlparse
+
+from traitlets.config import SingletonConfigurable, LoggingConfigurable
 
 # Combined metaclass for BaseDashboard
 class DashboardMeta(ABCMeta, type(LoggingConfigurable)):
     pass
 
-def extract_url(text: str):
+def extract_url(text: str) -> Optional[str]:
     # Basic regex pattern to match an HTTP/HTTPS URL
     url_pattern = re.compile(r'(https?://\S+)')
     
@@ -124,6 +125,12 @@ class BaseDashboard(LoggingConfigurable, metaclass=DashboardMeta):
         """
         pass
 
+    def get_run_env(self) -> Optional[Dict[str, str]]:
+        """
+        Return environment variables for the dashboard process.
+        """
+        return None
+
     def start(self) -> None:
         """
         Start the dashboard application
@@ -134,11 +141,23 @@ class BaseDashboard(LoggingConfigurable, metaclass=DashboardMeta):
                 f"on port {self.port}"
             )
             cmd = self.get_run_command()
+            env_vars = self.get_run_env()
             try:
                 if self.app_start_dir:
-                    self.process = Popen(cmd, cwd=self.app_start_dir, stdout=PIPE)
+                    self.process = Popen(
+                        cmd,
+                        cwd=self.app_start_dir,
+                        stdout=PIPE,
+                        stderr=PIPE,
+                        env=env_vars
+                    )
                 else:
-                    self.process = Popen(cmd, stdout=PIPE)
+                    self.process = Popen(
+                        cmd,
+                        stdout=PIPE,
+                        stderr=PIPE,
+                        env=env_vars
+                    )
             except CalledProcessError as error:
                 self.log.info(
                     "Failed to start dashboard ",
@@ -146,6 +165,31 @@ class BaseDashboard(LoggingConfigurable, metaclass=DashboardMeta):
                 )
 
             self.internal_host = self.parse_hostname()
+
+    def read_startup_line(self) -> str:
+        """
+        Read one startup line from process stdout and surface startup failures.
+        """
+        if not self.process or not self.process.stdout:
+            raise RuntimeError("Dashboard process did not start correctly.")
+
+        output_line = self.process.stdout.readline().decode('utf-8')
+        if output_line:
+            return output_line
+
+        if self.process.poll() is not None:
+            stderr_text = ""
+            if self.process.stderr:
+                stderr_text = self.process.stderr.read().decode("utf-8").strip()
+            if stderr_text:
+                self.log.error(f"Dashboard process exited early: {stderr_text}")
+                raise RuntimeError(
+                    "Dashboard process exited before startup output was available. "
+                    f"stderr: {stderr_text}"
+                )
+            raise RuntimeError("Dashboard process exited before startup output was available.")
+
+        return output_line
     
     def stop(self) -> None:
         """
@@ -260,9 +304,9 @@ class DashApplication(BaseDashboard):
 
     def get_run_command(self) -> list:
         return [
-            sys.executable, self.app_basename,
+            sys.executable, "-m", "auto_dashboards.dash_runner",
+            "--script-path", self.path,
             "--port", str(self.port),
-            "--no-browser",
             "--proxy-path", f"/proxy/{self.port}"
         ]
     
@@ -274,7 +318,7 @@ class DashApplication(BaseDashboard):
         #   * Debug mode: off
 
         # Parse output line with URL
-        output_line = self.process.stdout.readline().decode('utf-8')
+        output_line = self.read_startup_line()
 
         # Wait for the server to get ready to accept connections
         sleep(1)

@@ -118,6 +118,32 @@ the frontend extension, check the frontend extension is installed:
 jupyter labextension list
 ```
 
+## Dash script authoring
+
+When launching Dash through Auto Dashboards, keep the script as plain Dash.
+The managed runner loads your script and starts the app for you.
+
+Rules:
+- Use standard Dash app creation (`app = Dash(__name__)`).
+- Expose either a top-level `app` or a `create_app(...)` function that returns a Dash app.
+- Define `app.layout` as usual.
+- You may keep a local `if __name__ == "__main__": app.run()` block for direct Python runs.
+- Do not parse `--port`, `--proxy-path`, or `--no-browser` in your script when using Auto Dashboards.
+- Keep the file valid Python with no notebook magics.
+
+```python
+from dash import Dash, html
+
+app = Dash(__name__)
+app.layout = html.Div("Hello from Dash")
+
+if __name__ == "__main__":
+    app.run()
+```
+
+Auto Dashboards injects managed runtime defaults for Jupyter proxy compatibility
+(port, host, and proxy pathname prefix).
+
 ## Acknowledgments
 
 This extension is initially based on the Elyra AI Toolkit's [Streamlit extension](https://github.com/elyra-ai/streamlit-extension) that provides Streamlit execution and preview functionality.
