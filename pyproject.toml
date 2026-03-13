@@ -5,14 +5,18 @@ build-backend = "hatchling.build"
 [project]
 name = "auto-dashboards"
 readme = "README.md"
-license = { file = "LICENSE" }
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 classifiers = [
+    "Development Status :: 4 - Beta",
     "Framework :: Jupyter",
     "Framework :: Jupyter :: JupyterLab",
     "Framework :: Jupyter :: JupyterLab :: 4",
     "Framework :: Jupyter :: JupyterLab :: Extensions",
     "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
@@ -20,6 +24,9 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: User Interfaces",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
     "jupyter_server>=2.4.0,<3",
@@ -27,7 +34,14 @@ dependencies = [
     "nbformat",
     "openai"
 ]
-dynamic = ["version", "description", "authors", "urls", "keywords"]
+dynamic = ["version", "description", "authors", "keywords"]
+
+[project.urls]
+Homepage = "https://github.com/orbrx/auto-dashboards"
+Repository = "https://github.com/orbrx/auto-dashboards"
+"Bug Tracker" = "https://github.com/orbrx/auto-dashboards/issues"
+Changelog = "https://github.com/orbrx/auto-dashboards/releases"
+"Extension Marketplace" = "https://marketplace.orbrx.io/extensions/auto-dashboards"
 
 [project.optional-dependencies]
 streamlit = ["streamlit"]
@@ -50,7 +64,7 @@ test = [
 source = "nodejs"
 
 [tool.hatch.metadata.hooks.nodejs]
-fields = ["description", "authors", "urls", "keywords"]
+fields = ["description", "authors", "keywords"]
 
 [tool.hatch.build.targets.sdist]
 artifacts = ["auto_dashboards/labextension"]

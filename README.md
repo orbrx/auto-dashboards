@@ -1,5 +1,12 @@
+<h1 align="center">
+  <img src="https://github.com/user-attachments/assets/99abd1a7-7e99-4d20-b72c-892e0d7804d8" alt="Auto Dashboards logo" height="64" valign="middle">
+  <span>Auto Dashboards</span>
+</h1>
+<p align="center">
+  AI-powered JupyterLab extension to convert Jupyter notebooks into interactive Streamlit, Dash, and Solara dashboards with one click — preview side-by-side without leaving JupyterLab.
+</p>
+
 <!--
-{% comment %}
 Copyright 2017-2023 Elyra Authors
 Copyright 2025 Orange Bricks
 
@@ -14,16 +21,7 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-{% endcomment %}
 -->
-
-<h1 align="center">
-  <img src="https://github.com/user-attachments/assets/99abd1a7-7e99-4d20-b72c-892e0d7804d8" alt="Auto Dashboards logo" height="64" valign="middle">
-  <span>Auto Dashboards</span>
-</h1>
-<p align="center">
-  Convert Jupyter notebooks to dashboards in one click and preview side-by-side.
-</p>
 
 [![auto-dashboards](https://marketplace.orbrx.io/api/badge/auto-dashboards?metric=downloads-month&leftColor=%23555&rightColor=%23F37620&style=flat)](https://marketplace.orbrx.io/extensions/auto-dashboards)
 

@@ -1,11 +1,26 @@
 {
   "name": "@orbrx/auto-dashboards",
-  "version": "0.3.0",
-  "description": "Auto convert Jupyter notebooks to dashboards (Streamlit, Dash, Gradio, Solara)",
+  "version": "0.3.1",
+  "description": "AI-powered JupyterLab extension to convert Jupyter notebooks into interactive Streamlit, Dash, Solara, and Gradio dashboards with one-click preview",
   "keywords": [
     "jupyter",
     "jupyterlab",
-    "jupyterlab-extension"
+    "jupyterlab-extension",
+    "notebook",
+    "dashboard",
+    "streamlit",
+    "solara",
+    "dash",
+    "gradio",
+    "notebook-to-dashboard",
+    "data-science",
+    "visualization",
+    "interactive",
+    "ai",
+    "llm",
+    "openai",
+    "convert",
+    "preview"
   ],
   "homepage": "https://github.com/orbrx/auto-dashboards",
   "bugs": {
